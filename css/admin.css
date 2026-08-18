@@ -1,0 +1,247 @@
+/* ==========================================================================
+   Golden Hour — Hospital Admin & Fleet Operations Styles
+   ========================================================================== */
+
+/* Stat Summary Grid */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.stat-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  text-align: left;
+}
+
+.stat-card span {
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--ink-secondary);
+  text-transform: uppercase;
+  display: block;
+}
+
+.stat-card strong {
+  display: block;
+  font-size: 1.45rem;
+  font-family: var(--font-mono);
+  color: var(--ink-primary);
+  margin-top: 4px;
+  line-height: 1.1;
+}
+
+.admin-heading {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 22px 0 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+/* Tables */
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-subtle);
+  background: var(--bg-surface-elevated);
+  margin-bottom: 20px;
+}
+
+.admin-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.875rem;
+  min-width: 580px;
+}
+
+.admin-table th {
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px 14px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--ink-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  letter-spacing: 0.04em;
+}
+
+.admin-table td {
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-subtle);
+  color: var(--ink-primary);
+  vertical-align: middle;
+}
+
+.admin-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.admin-table tbody tr:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.bed-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.bed-btn {
+  width: 32px;
+  height: 32px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-sm);
+  color: var(--ink-primary);
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.bed-btn:hover {
+  background: var(--teal);
+  color: #ffffff;
+  border-color: var(--teal);
+}
+
+.table-action {
+  padding: 6px 12px !important;
+  font-size: 0.78rem !important;
+  min-height: 32px !important;
+}
+
+/* Specialist Doctors Grid */
+.specialist-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.specialist-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  transition: transform var(--transition-fast);
+}
+
+.specialist-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-medium);
+}
+
+.specialist-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  display: block;
+}
+
+.specialist-role {
+  font-size: 0.78rem;
+  color: var(--ink-secondary);
+  display: block;
+  margin-top: 2px;
+}
+
+.specialist-status {
+  margin-top: 8px;
+}
+
+/* Fleet Units Grid */
+.fleet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 22px;
+}
+
+.fleet-card {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  transition: all var(--transition-fast);
+}
+
+.fleet-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-medium);
+}
+
+.fleet-card-active {
+  border-color: var(--orange);
+  background: rgba(249, 115, 22, 0.08);
+}
+
+.fleet-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.fleet-detail {
+  font-size: 0.8125rem;
+  color: var(--ink-secondary);
+  display: block;
+}
+
+.fleet-location {
+  font-size: 0.75rem;
+  color: var(--ink-muted);
+  margin-top: 4px;
+}
+
+/* Dispatch Box */
+.dispatch-box {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  padding: 18px;
+  margin-bottom: 22px;
+}
+
+.dispatch-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 14px;
+}
+
+/* Search and Filter Toolbar for Registry */
+.registry-toolbar {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.registry-search {
+  flex: 1;
+  min-width: 200px;
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  font-size: 0.875rem;
+  color: var(--ink-primary);
+}
+
+.registry-filter {
+  background: var(--bg-surface-elevated);
+  border: 1px solid var(--border-medium);
+  border-radius: var(--radius-md);
+  padding: 8px 12px;
+  font-size: 0.875rem;
+  color: var(--ink-primary);
+}

@@ -3,122 +3,175 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Golden Hour — Smart Emergency & Hospital Admin</title>
+  <title>Golden Hour — Smart Ambulance-to-ER Emergency Corridor</title>
+  <meta name="description" content="Next-generation smart emergency ambulance-to-ER telemetry corridor with real-time vitals, capability-matched routing, NEWS2 triage, and hospital bed administration." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="mode-paramedic">
-  <!-- Application Header -->
+<body class="mode-paramedic theme-dark">
+
+  <!-- ==================== APPLICATION HEADER ==================== -->
   <header class="app-header">
     <div class="brand">
       <img src="assets/logo.jpg" alt="Golden Hour Logo" />
       <div class="brand-text">
         <h1>Golden Hour</h1>
-        <span>Smart Ambulance-to-ER Data Corridor · Team Aurora</span>
+        <span>Smart Ambulance-to-ER Corridor</span>
       </div>
     </div>
 
     <div class="header-controls">
-      <div class="view-switcher">
-        <button class="view-btn pc-only-tab" data-mode="overview">Command Overview</button>
-        <button class="view-btn active" data-mode="paramedic">Paramedic Unit</button>
-        <button class="view-btn" data-mode="er">ER Dashboard</button>
-        <button class="view-btn" data-mode="hospital-admin">🏥 Hospital Admin</button>
-        <button class="view-btn" data-mode="patient-admin">🚑 Patient & Fleet Ops</button>
-      </div>
-      <div class="live-indicator">
-        <span class="dot live"></span> Live Telemetry Corridor
+      <!-- Laptop / Desktop View Navigation Switcher -->
+      <nav class="view-switcher" aria-label="Main Navigation">
+        <button class="view-btn" data-mode="overview" id="nav-overview">
+          <span class="nav-icon-glyph">📡</span>
+          <span>Overview</span>
+        </button>
+        <button class="view-btn active" data-mode="paramedic" id="nav-paramedic">
+          <span class="nav-icon-glyph">🚑</span>
+          <span>Paramedic</span>
+        </button>
+        <button class="view-btn" data-mode="er" id="nav-er">
+          <span class="nav-icon-glyph">🏥</span>
+          <span>ER Monitor</span>
+        </button>
+        <button class="view-btn" data-mode="hospital-admin" id="nav-admin">
+          <span class="nav-icon-glyph">📋</span>
+          <span>Hospital Admin</span>
+        </button>
+        <button class="view-btn" data-mode="patient-admin" id="nav-fleet">
+          <span class="nav-icon-glyph">🚨</span>
+          <span>Fleet Ops</span>
+        </button>
+        <button class="view-btn" data-mode="split" id="nav-split" title="Dual Split View for PC / Command Center">
+          <span class="nav-icon-glyph">🖥️</span>
+          <span>Split View</span>
+        </button>
+      </nav>
+
+      <!-- Utility Actions -->
+      <div class="header-actions">
+        <button class="nav-action-btn" id="audio-toggle-btn" title="Toggle Telemetry Audio (M)">
+          <span class="btn-icon-symbol">🔇</span>
+          <span class="btn-label">Audio Muted</span>
+        </button>
+        <button class="nav-action-btn" id="theme-toggle-btn" title="Switch to Day Mode (D)">
+          <span class="btn-icon-symbol">☀️</span>
+          <span class="btn-label">Day Mode</span>
+        </button>
+        <div class="live-indicator">
+          <span class="dot live"></span>
+          <span class="live-text">Live Telemetry</span>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- Main Simulator Grid -->
+  <!-- ==================== MAIN SIMULATOR CONTAINER ==================== -->
   <main class="app-container">
     <div class="dual-view">
 
       <!-- ==================== 0. PC COMMAND OVERVIEW ==================== -->
-      <section class="pane-overview">
+      <section class="pane-overview" aria-label="Command Overview">
         <div class="overview-shell">
           <div class="overview-main">
+            <!-- Live Patient Vitals Summary -->
             <div class="overview-panel overview-patient">
               <div class="overview-panel-header">
                 <div>
-                  <span class="section-kicker">LIVE PATIENT</span>
+                  <span class="section-kicker">LIVE IN-FLIGHT PATIENT</span>
                   <h2 id="overview-patient-id">GH-2048</h2>
                 </div>
-                <span class="badge badge-teal" id="overview-risk-badge">STABLE</span>
+                <span class="badge badge-teal interactive" id="overview-risk-badge" onclick="TriageEngine.renderBreakdownModal(AppState.get().patient)" title="Click for NEWS2 Clinical Breakdown">STABLE</span>
               </div>
 
               <div class="overview-vitals">
                 <div>
-                  <span>HR</span>
+                  <span>HEART RATE</span>
                   <strong id="overview-hr">84</strong>
                   <small>bpm</small>
                 </div>
                 <div>
-                  <span>SpO2</span>
+                  <span>OXYGEN SpO₂</span>
                   <strong id="overview-spo2">98%</strong>
-                  <small>oxygen</small>
+                  <small>saturation</small>
                 </div>
                 <div>
-                  <span>BP</span>
+                  <span>BLOOD PRESSURE</span>
                   <strong id="overview-bp">122/80</strong>
                   <small>mmHg</small>
                 </div>
                 <div>
-                  <span>GCS</span>
+                  <span>GCS / NEWS2</span>
                   <strong id="overview-gcs">15</strong>
                   <small id="overview-news">NEWS2 0</small>
                 </div>
               </div>
 
               <div class="overview-note">
-                <span>Case Notes</span>
+                <span>Clinical Field Notes</span>
                 <p id="overview-notes">Roadside accident. Patient conscious, complaining of acute localized pain.</p>
               </div>
             </div>
 
+            <!-- Route & Traffic Priority Map -->
             <div class="overview-panel overview-map-panel">
               <div class="overview-panel-header">
                 <div>
-                  <span class="section-kicker">ROUTE</span>
+                  <span class="section-kicker">GREEN CORRIDOR ROUTE</span>
                   <h2>Ambulance Unit 04</h2>
                 </div>
-                <strong id="overview-eta">08 min 12s</strong>
+                <strong id="overview-eta" class="eta-value">08 min 12s</strong>
               </div>
 
               <div class="map-container overview-map">
                 <div class="map-route-heading">
-                  <span>Unit 04 to <strong id="overview-target-hospital">CityCare Trauma Centre</strong></span>
-                  <span class="badge badge-teal badge-route">PRIORITY ROUTE</span>
+                  <span>Unit 04 → <strong id="overview-target-hospital">CityCare Trauma Centre</strong></span>
+                  <button class="btn-primary btn-compact" onclick="RoutingEngine.overrideAllSignals()">
+                    🚦 Clear Green Corridor
+                  </button>
                 </div>
 
                 <svg class="map-svg" viewBox="0 0 600 240" aria-label="Priority ambulance route map">
-                  <line x1="50" y1="0" x2="50" y2="240" stroke="#334155" stroke-width="2" />
-                  <line x1="200" y1="0" x2="200" y2="240" stroke="#334155" stroke-width="2" />
-                  <line x1="400" y1="0" x2="400" y2="240" stroke="#334155" stroke-width="2" />
-                  <line x1="0" y1="60" x2="600" y2="60" stroke="#334155" stroke-width="2" />
-                  <line x1="0" y1="160" x2="600" y2="160" stroke="#334155" stroke-width="2" />
+                  <line x1="50" y1="0" x2="50" y2="240" stroke="#1e293b" stroke-width="2" />
+                  <line x1="200" y1="0" x2="200" y2="240" stroke="#1e293b" stroke-width="2" />
+                  <line x1="400" y1="0" x2="400" y2="240" stroke="#1e293b" stroke-width="2" />
+                  <line x1="0" y1="60" x2="600" y2="60" stroke="#1e293b" stroke-width="2" />
+                  <line x1="0" y1="160" x2="600" y2="160" stroke="#1e293b" stroke-width="2" />
+
                   <path id="overview-active-route" d="M 60 160 L 200 160 L 200 60 L 400 60 L 520 60" fill="none" stroke="#0d9488" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
                   <path id="overview-active-route-dash" d="M 60 160 L 200 160 L 200 60 L 400 60 L 520 60" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-dasharray="8 6" />
+
                   <circle cx="60" cy="160" r="8" fill="#f97316" />
-                  <text x="60" y="190" fill="#cbd5e1" font-size="11" text-anchor="middle">Scene</text>
+                  <text x="60" y="190" fill="#cbd5e1" font-size="11" text-anchor="middle">Accident Scene</text>
+
                   <circle cx="520" cy="60" r="12" fill="#0d9488" />
                   <text x="520" y="38" fill="#5eead4" font-size="11" font-weight="bold" text-anchor="middle">Hospital</text>
+
                   <g id="overview-ambulance-marker" transform="translate(300, 60)">
-                    <circle cx="0" cy="0" r="14" fill="#ef4444" opacity="0.3" />
-                    <circle cx="0" cy="0" r="9" fill="#ef4444" />
-                    <text x="0" y="4" fill="white" font-size="10" font-weight="bold" text-anchor="middle">A</text>
+                    <circle cx="0" cy="0" r="16" fill="#ef4444" opacity="0.3">
+                      <animate attributeName="r" values="10;20;10" dur="1.5s" repeatCount="indefinite" />
+                    </circle>
+                    <circle cx="0" cy="0" r="10" fill="#ef4444" />
+                    <text x="0" y="4" fill="white" font-size="10" font-weight="bold" text-anchor="middle">🚑</text>
                   </g>
                 </svg>
+
+                <div class="map-signal-list" id="overview-signals-container">
+                  <!-- Rendered via JS -->
+                </div>
               </div>
             </div>
           </div>
 
+          <!-- Overview Sidebar -->
           <aside class="overview-side">
             <div class="overview-panel">
               <div class="overview-panel-header">
                 <div>
-                  <span class="section-kicker">DESTINATION</span>
+                  <span class="section-kicker">PRIMARY DESTINATION</span>
                   <h2 id="overview-hospital-name">CityCare Trauma Centre</h2>
                 </div>
                 <span class="badge badge-orange" id="overview-hospital-eta">08 min</span>
@@ -126,21 +179,21 @@
               <div class="overview-hospital-meta">
                 <div>
                   <span>Specialty</span>
-                  <strong id="overview-hospital-specialty">Trauma</strong>
+                  <strong id="overview-hospital-specialty">TRAUMA</strong>
                 </div>
                 <div>
-                  <span>Beds</span>
+                  <span>Bed Capacity</span>
                   <strong id="overview-hospital-beds">7 available</strong>
                 </div>
               </div>
-              <p id="overview-hospital-desc">Trauma Â· ICU Â· Emergency Surgery</p>
+              <p id="overview-hospital-desc">Trauma · ICU · Emergency Surgery</p>
             </div>
 
             <div class="overview-panel">
               <div class="overview-panel-header">
                 <div>
-                  <span class="section-kicker">HOSPITAL CAPACITY</span>
-                  <h2>Live Availability</h2>
+                  <span class="section-kicker">NETWORK AVAILABILITY</span>
+                  <h2>Emergency Hospitals</h2>
                 </div>
               </div>
               <div id="overview-hospital-list" class="overview-hospital-list"></div>
@@ -148,122 +201,165 @@
           </aside>
         </div>
       </section>
-      
+
       <!-- ==================== 1. PARAMEDIC TABLET ==================== -->
-      <section class="pane-paramedic">
+      <section class="pane-paramedic" aria-label="Paramedic Unit Intake">
         
         <!-- Header Banner & Presets -->
         <div class="card">
           <div class="card-header">
             <h2><span class="badge badge-teal">PARAMEDIC UNIT 04</span> Patient Intake</h2>
-            <div class="text-right">
-              <small class="label-muted">GOLDEN HOUR WINDOW</small>
+            <div class="countdown-wrap">
+              <span class="section-kicker">GOLDEN HOUR WINDOW</span>
               <strong id="paramedic-countdown" class="countdown">59:45</strong>
             </div>
           </div>
 
-          <!-- Single-Tap Presets -->
+          <!-- One-Touch Field Presets -->
           <div class="preset-section">
-            <span class="label-muted preset-label">SINGLE-TAP CASE PRESETS</span>
+            <span class="section-kicker">ONE-TOUCH CLINICAL CASE PRESETS</span>
             <div class="preset-group">
-              <button class="preset-chip" data-preset="fracture">🦴 Fracture (Stable)</button>
-              <button class="preset-chip" data-preset="chest">🫀 Chest Pain (Moderate)</button>
-              <button class="preset-chip" data-preset="unconscious">🚨 Unconscious / GCS 8 (Critical)</button>
+              <button class="preset-chip active" data-preset="fracture">🦴 Severe Fracture (Stable)</button>
+              <button class="preset-chip" data-preset="chest">🫀 Acute STEMI / Chest Pain</button>
+              <button class="preset-chip" data-preset="unconscious">🚨 TBI / Unconscious (GCS 7)</button>
+              <button class="preset-chip" data-preset="asthma">🫁 Severe Asthma / Resp.</button>
+              <button class="preset-chip" data-preset="anaphylaxis">⚡ Anaphylaxis / Shock</button>
             </div>
           </div>
 
           <!-- Voice Input Bar -->
           <div class="voice-bar">
-            <button type="button" class="btn-primary" id="voice-btn">🎙 Start Voice Input</button>
-            <label for="simulated-voice-select" class="control-label">Test voice phrase</label>
-            <select id="simulated-voice-select" class="form-group voice-select">
-              <option value="">-- Or Select Test Voice Phrase --</option>
-              <option value="heart rate 118, spo2 91, breathing rate 24, temp 38.2">"Heart rate 118, oxygen 91, breathing 24, temp 38.2"</option>
-              <option value="spo2 88, sbp 85, gcs 7, unconscious collision">"SpO2 88, blood pressure 85, GCS 7, unconscious collision"</option>
-              <option value="heart rate 76, spo2 99, sbp 120, gcs 15">"Heart rate 76, oxygen 99, BP 120, GCS 15"</option>
+            <button type="button" class="btn-primary" id="voice-btn">🎙 Start Voice Dictation</button>
+            <label for="simulated-voice-select" class="sr-only">Test Voice Phrase</label>
+            <select id="simulated-voice-select" class="voice-select">
+              <option value="">-- Or Select Test Clinical Phrase --</option>
+              <option value="heart rate 118, oxygen 91, breathing rate 24, temp 38.2">"Heart rate 118, oxygen 91, breathing 24, temp 38.2"</option>
+              <option value="spo2 88, blood pressure 85, gcs 7, unconscious collision">"SpO2 88, blood pressure 85, GCS 7, unconscious collision"</option>
+              <option value="heart rate 76, oxygen 99, blood pressure 120, gcs 15">"Heart rate 76, oxygen 99, BP 120, GCS 15"</option>
             </select>
-            <button type="button" class="btn-secondary" id="sim-voice-btn">Parse</button>
+            <button type="button" class="btn-secondary" id="sim-voice-btn">Parse Phrase</button>
           </div>
         </div>
 
-        <!-- Patient Vitals Entry Form -->
+        <!-- Patient Vitals Entry Form with Phone Steppers -->
         <div class="card">
           <div class="card-header">
-            <h2>Structured Vitals & History</h2>
-            <span class="badge badge-teal">LIVE PUSH TO ER</span>
+            <h2>Structured Vitals & Clinical History</h2>
+            <div class="cluster">
+              <button class="btn-secondary btn-compact" id="autostream-btn" title="Simulate real-time ambient vitals fluctuation">
+                📡 Simulated Corridor Telemetry
+              </button>
+              <span class="badge badge-teal">LIVE PUSH TO ER</span>
+            </div>
           </div>
 
-          <form id="patient-form">
+          <form id="patient-form" onsubmit="event.preventDefault();">
             <div class="form-grid">
               <div class="form-group">
                 <label for="patient-id">Patient ID</label>
                 <input id="patient-id" value="GH-2048" required />
               </div>
+              
               <div class="form-group">
-                <label for="age">Age</label>
-                <input id="age" type="number" value="42" required />
+                <label for="age">Age (Years)</label>
+                <div class="stepper-wrap">
+                  <button type="button" class="stepper-btn" data-target="age" data-action="dec" data-step="1">-</button>
+                  <input id="age" type="number" value="42" required />
+                  <button type="button" class="stepper-btn" data-target="age" data-action="inc" data-step="1">+</button>
+                </div>
               </div>
+
               <div class="form-group">
                 <label for="gcs">GCS Score (3-15)</label>
-                <input id="gcs" type="number" min="3" max="15" value="15" required />
+                <div class="stepper-wrap">
+                  <button type="button" class="stepper-btn" data-target="gcs" data-action="dec" data-step="1">-</button>
+                  <input id="gcs" type="number" min="3" max="15" value="15" required />
+                  <button type="button" class="stepper-btn" data-target="gcs" data-action="inc" data-step="1">+</button>
+                </div>
               </div>
+
               <div class="form-group">
                 <label for="hr">Heart Rate (bpm)</label>
-                <input id="hr" type="number" value="84" required />
+                <div class="stepper-wrap">
+                  <button type="button" class="stepper-btn" data-target="hr" data-action="dec" data-step="2">-</button>
+                  <input id="hr" type="number" value="84" required />
+                  <button type="button" class="stepper-btn" data-target="hr" data-action="inc" data-step="2">+</button>
+                </div>
               </div>
+
               <div class="form-group">
-                <label for="spo2">SpO₂ (%)</label>
-                <input id="spo2" type="number" value="98" required />
+                <label for="spo2">SpO₂ Oxygen (%)</label>
+                <div class="stepper-wrap">
+                  <button type="button" class="stepper-btn" data-target="spo2" data-action="dec" data-step="1">-</button>
+                  <input id="spo2" type="number" value="98" required />
+                  <button type="button" class="stepper-btn" data-target="spo2" data-action="inc" data-step="1">+</button>
+                </div>
               </div>
+
               <div class="form-group">
                 <label for="sbp">Systolic BP (mmHg)</label>
-                <input id="sbp" type="number" value="122" required />
+                <div class="stepper-wrap">
+                  <button type="button" class="stepper-btn" data-target="sbp" data-action="dec" data-step="5">-</button>
+                  <input id="sbp" type="number" value="122" required />
+                  <button type="button" class="stepper-btn" data-target="sbp" data-action="inc" data-step="5">+</button>
+                </div>
               </div>
+
               <div class="form-group">
                 <label for="rr">Resp. Rate (/min)</label>
-                <input id="rr" type="number" value="16" required />
+                <div class="stepper-wrap">
+                  <button type="button" class="stepper-btn" data-target="rr" data-action="dec" data-step="1">-</button>
+                  <input id="rr" type="number" value="16" required />
+                  <button type="button" class="stepper-btn" data-target="rr" data-action="inc" data-step="1">+</button>
+                </div>
               </div>
+
               <div class="form-group">
                 <label for="temp">Temperature (°C)</label>
-                <input id="temp" type="number" step="0.1" value="36.8" required />
+                <div class="stepper-wrap">
+                  <button type="button" class="stepper-btn" data-target="temp" data-action="dec" data-step="0.1">-</button>
+                  <input id="temp" type="number" step="0.1" value="36.8" required />
+                  <button type="button" class="stepper-btn" data-target="temp" data-action="inc" data-step="0.1">+</button>
+                </div>
               </div>
+
               <div class="form-group">
-                <label for="injury-type">Primary Injury / Specialty</label>
+                <label for="injury-type">Primary Clinical Specialty</label>
                 <select id="injury-type">
                   <option value="trauma">Trauma / General Emergency</option>
-                  <option value="cardiology">Cardiology / Chest Pain</option>
-                  <option value="neurology">Neurology / Stroke / GCS</option>
+                  <option value="cardiology">Cardiology / STEMI / Chest Pain</option>
+                  <option value="neurology">Neurology / Stroke / GCS Depression</option>
                 </select>
               </div>
 
               <!-- History & Notes -->
               <div class="form-group full">
-                <label for="history">Injury Description & Patient History</label>
+                <label for="history">Injury Narrative & Clinical Notes</label>
                 <textarea id="history" rows="2">Roadside accident. Patient conscious, complaining of acute localized pain. No known drug allergies.</textarea>
               </div>
 
-              <!-- Medicine Photo OCR Section -->
+              <!-- Neural OCR Medication Bottle Scanner -->
               <div class="form-group full">
                 <label for="medicine-file">Medicine Bottle Photo / OCR Extract</label>
                 <div class="ocr-box" id="ocr-box-container">
-                  <span class="ocr-prompt">📷 Click or Drop Medicine Photo for instant OCR Scanning</span>
+                  <span class="ocr-prompt">📷 Tap or Drag Medicine Photo for Instant OCR Verification</span>
                   <input type="file" id="medicine-file" accept="image/*" />
-                  <div class="ocr-preview is-hidden" id="ocr-preview-area">
+                  <div class="ocr-preview hidden" id="ocr-preview-area">
                     <img id="ocr-img-thumb" src="assets/vitals.jpg" alt="Pill container preview" />
                     <div class="ocr-details">
                       <strong class="ocr-title" id="ocr-detected-title">Scanning Medicine Bottle…</strong>
-                      <p class="ocr-text" id="ocr-detected-text">Extracting active compounds via OCR API</p>
+                      <p class="ocr-text" id="ocr-detected-text">Extracting active compounds via Neural OCR</p>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
 
-            <!-- NEWS2 Breakdown -->
-            <div class="score-box" id="paramedic-score-box">
+            <!-- NEWS2 Score Box (Click to inspect breakdown) -->
+            <div class="score-box interactive" id="paramedic-score-box" onclick="TriageEngine.renderBreakdownModal(AppState.get().patient)" title="Click to view detailed clinical NEWS2 breakdown">
               <div>
                 <strong class="score-title" id="score-status-title">Clinical Risk Assessment</strong>
-                <span class="score-description" id="score-status-desc">NEWS2 Indicator calculated continuously</span>
+                <span class="score-description" id="score-status-desc">NEWS2 Indicator calculated continuously · Tap for full clinical breakdown</span>
               </div>
               <div class="score-metrics">
                 <div class="score-val">
@@ -283,26 +379,26 @@
         <div class="card">
           <div class="card-header">
             <h2>Capability-Matched Hospital Routing</h2>
-            <span class="badge badge-teal">MAPS INTEGRATED</span>
+            <span class="badge badge-teal">GEO-CAPABILITY MATCH</span>
           </div>
-          <div id="hospital-list-paramedic">
+          <div id="hospital-list-paramedic" class="hospital-cards-list">
             <!-- Dynamic Hospital Cards -->
           </div>
         </div>
 
-        <!-- Digital Handoff QR -->
-        <div class="card handoff-card">
+        <!-- Digital Handoff QR Card -->
+        <div class="card text-center">
           <div class="card-header">
-            <h2>Digital Transit Handoff</h2>
-            <span class="badge badge-orange">QR SYNC</span>
+            <h2>Digital Transit Handoff Token</h2>
+            <span class="badge badge-orange">EHR SYNC</span>
           </div>
-          <p class="handoff-description">Generate instant transfer QR code to sync full log into hospital electronic records on arrival.</p>
+          <p class="flow-note">Generate instant transit QR code to sync full paramedic intake, vitals telemetry, and OCR meds into the ER system on arrival.</p>
           <button class="btn-primary" id="generate-qr-btn">▦ Generate Transfer QR Code</button>
           
-          <div id="qr-modal-area" class="qr-modal-area is-hidden">
+          <div id="qr-modal-area" class="hidden">
             <div class="qr-display">
               <div id="qr-svg-holder"></div>
-              <small class="qr-token">Encrypted Transit Token: GH-2048-DATA-SYNC</small>
+              <small class="qr-token">Token: GH-2048-DATA-SYNC</small>
             </div>
           </div>
         </div>
@@ -310,38 +406,54 @@
       </section>
 
       <!-- ==================== 2. ER COMMAND CENTER ==================== -->
-      <section class="pane-er">
+      <section class="pane-er" aria-label="Emergency Room Monitor">
         
         <!-- Flashing Critical Alert State Banner -->
-        <div id="er-critical-banner" class="er-critical-alert is-hidden">
+        <div id="er-critical-banner" class="er-critical-alert hidden">
           <div>
             <strong class="critical-title">🚨 CRITICAL PATIENT ALERT — HIGH RISK TELEMETRY</strong>
             <span class="critical-reason" id="er-critical-reason">GCS Score 8 (Severe) · NEWS2 Score 7. Prepare Trauma Bay 1 immediately!</span>
           </div>
-          <span class="badge badge-priority">PRIORITY RED</span>
+          <span class="badge badge-red">PRIORITY RED</span>
+        </div>
+
+        <!-- Live Dynamic Lead II ECG Waveform Canvas Card -->
+        <div class="ecg-monitor-card">
+          <div class="ecg-header">
+            <span class="ecg-title">
+              <span class="dot live"></span> REAL-TIME LEAD II ECG MONITOR & PLETHYSMOGRAPH
+            </span>
+            <div class="ecg-live-metrics">
+              <span class="ecg-metric-hr" id="ecg-live-hr">84 BPM</span>
+              <span class="ecg-metric-spo2" id="ecg-live-spo2">98% SpO2</span>
+            </div>
+          </div>
+          <div class="ecg-canvas-wrap">
+            <canvas id="ecg-canvas" class="ecg-canvas"></canvas>
+          </div>
         </div>
 
         <!-- Live Telemetry Monitor Card -->
         <div class="card">
           <div class="card-header">
-            <h2><span class="badge badge-orange">ER MONITOR</span> Incoming Ambulance Live Telemetry</h2>
-            <span class="badge badge-teal" id="er-sync-badge">CONNECTED · LIVE FEED</span>
+            <h2><span class="badge badge-orange">ER MONITOR</span> Incoming Ambulance Live Feed</h2>
+            <span class="badge badge-teal" id="er-sync-badge">TELEMETRY CONNECTED</span>
           </div>
 
           <div class="er-vitals-grid">
-            <div>
+            <div class="er-vital-box">
               <span class="telemetry-label">PATIENT ID</span>
-              <strong id="er-patient-id" class="patient-id-value">GH-2048</strong>
+              <strong id="er-patient-id" class="telemetry-value telemetry-value-id">GH-2048</strong>
             </div>
-            <div>
+            <div class="er-vital-box">
               <span class="telemetry-label">HEART RATE</span>
               <strong id="er-hr" class="telemetry-value">84 <small class="unit-label">bpm</small></strong>
             </div>
-            <div>
+            <div class="er-vital-box">
               <span class="telemetry-label">SpO₂ OXYGEN</span>
               <strong id="er-spo2" class="telemetry-value">98%</strong>
             </div>
-            <div>
+            <div class="er-vital-box">
               <span class="telemetry-label">BLOOD PRESSURE</span>
               <strong id="er-bp" class="telemetry-value">122/80</strong>
             </div>
@@ -351,50 +463,52 @@
             <div>
               <span class="detail-label">RESPIRATION & TEMP</span>
               <div class="detail-value">
-                Resp: <span id="er-rr">16</span>/min · Temp: <span id="er-temp">36.8</span>°C
+                Resp: <span id="er-rr" class="mono">16</span>/min · Temp: <span id="er-temp" class="mono">36.8</span>°C
               </div>
             </div>
-            <div>
-              <span class="detail-label">CLINICAL SCORE STATUS</span>
-              <div class="detail-value detail-value-bold">
-                GCS: <span id="er-gcs-display">15</span> · NEWS2 Score: <span id="er-news-display" class="news-display">0 (Low Risk)</span>
+            <div class="interactive" onclick="TriageEngine.renderBreakdownModal(AppState.get().patient)">
+              <span class="detail-label">CLINICAL SCORE STATUS (TAP FOR DETAILS)</span>
+              <div class="detail-value">
+                GCS: <span id="er-gcs-display" class="mono">15</span> · NEWS2: <span id="er-news-display" class="news-display text-strong">0 (Low Risk)</span>
               </div>
             </div>
           </div>
 
           <div class="injury-note">
-            <strong>Injury / Notes:</strong> <span id="er-notes-display">Roadside accident. Patient conscious, complaining of acute localized pain.</span>
+            <strong>Injury / Field Notes:</strong> <span id="er-notes-display">Roadside accident. Patient conscious, complaining of acute localized pain.</span>
           </div>
         </div>
 
-        <!-- Active Transit Map -->
+        <!-- Active Transit Map & Traffic Priority Corridor -->
         <div class="card">
           <div class="card-header">
             <h2>Active Route & Traffic Priority Corridor</h2>
             <div class="text-right">
-              <small class="label-muted">DESTINATION ETA</small>
-              <strong id="er-eta-countdown" class="eta-countdown">08 min 12s</strong>
+              <span class="section-kicker">DESTINATION ETA</span>
+              <strong id="er-eta-countdown" class="eta-value">08 min 12s</strong>
             </div>
           </div>
 
           <div class="map-container">
             <div class="map-route-heading">
-              <span>🚑 Ambulance Unit 04 → <strong id="er-target-hospital-name">CityCare Trauma Centre</strong></span>
-              <span class="badge badge-teal badge-route">TRAFFIC LIGHTS CLEARED</span>
+              <span>🚑 Unit 04 → <strong id="er-target-hospital-name">CityCare Trauma Centre</strong></span>
+              <button class="btn-primary btn-compact" onclick="RoutingEngine.overrideAllSignals()">
+                🚦 Force Clear Corridor
+              </button>
             </div>
             
             <svg class="map-svg" viewBox="0 0 600 240" id="route-map-svg">
-              <line x1="50" y1="0" x2="50" y2="240" stroke="#334155" stroke-width="2" />
-              <line x1="200" y1="0" x2="200" y2="240" stroke="#334155" stroke-width="2" />
-              <line x1="400" y1="0" x2="400" y2="240" stroke="#334155" stroke-width="2" />
-              <line x1="0" y1="60" x2="600" y2="60" stroke="#334155" stroke-width="2" />
-              <line x1="0" y1="160" x2="600" y2="160" stroke="#334155" stroke-width="2" />
+              <line x1="50" y1="0" x2="50" y2="240" stroke="#1e293b" stroke-width="2" />
+              <line x1="200" y1="0" x2="200" y2="240" stroke="#1e293b" stroke-width="2" />
+              <line x1="400" y1="0" x2="400" y2="240" stroke="#1e293b" stroke-width="2" />
+              <line x1="0" y1="60" x2="600" y2="60" stroke="#1e293b" stroke-width="2" />
+              <line x1="0" y1="160" x2="600" y2="160" stroke="#1e293b" stroke-width="2" />
 
               <path id="svg-active-route" d="M 60 160 L 200 160 L 200 60 L 400 60 L 520 60" fill="none" stroke="#0d9488" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" />
               <path id="svg-active-route-dash" d="M 60 160 L 200 160 L 200 60 L 400 60 L 520 60" fill="none" stroke="#2dd4bf" stroke-width="2" stroke-dasharray="8 6" />
 
               <circle cx="60" cy="160" r="8" fill="#f97316" />
-              <text x="60" y="190" fill="#cbd5e1" font-size="11" text-anchor="middle">Accident Scene</text>
+              <text x="60" y="190" fill="#cbd5e1" font-size="11" text-anchor="middle">Scene</text>
 
               <circle cx="520" cy="60" r="12" fill="#0d9488" id="node-hosp-1" />
               <text x="520" y="38" fill="#5eead4" font-size="11" font-weight="bold" text-anchor="middle">CityCare Trauma</text>
@@ -406,38 +520,35 @@
               <text x="200" y="232" fill="#94a3b8" font-size="10" text-anchor="middle">Green Valley</text>
 
               <g id="svg-ambulance-marker" transform="translate(60, 160)">
-                <circle cx="0" cy="0" r="14" fill="#ef4444" opacity="0.3">
-                  <animate attributeName="r" values="10;18;10" dur="1.5s" repeatCount="indefinite" />
+                <circle cx="0" cy="0" r="16" fill="#ef4444" opacity="0.3">
+                  <animate attributeName="r" values="10;20;10" dur="1.5s" repeatCount="indefinite" />
                 </circle>
                 <circle cx="0" cy="0" r="9" fill="#ef4444" />
                 <text x="0" y="4" fill="white" font-size="10" font-weight="bold" text-anchor="middle">🚑</text>
               </g>
             </svg>
 
-            <div class="map-signal-list">
-              <span class="signal-clear">🚦 Signal #1 (Main St): CLEARED</span>
-              <span class="signal-clear">🚦 Signal #2 (Park Ave): CLEARED</span>
-              <span class="signal-clearing">🚦 Signal #3 (ER Entry): CLEARING IN 30s</span>
+            <div class="map-signal-list" id="er-signals-container">
+              <!-- Rendered via JS -->
             </div>
           </div>
         </div>
 
-        <!-- ER Handoff & read-only capacity status -->
+        <!-- Destination Capacity & Digital Handoff -->
         <div class="card">
           <div class="card-header">
-            <h2>Destination Capacity & Digital Handoff</h2>
-            <span class="badge badge-gray">READ-ONLY CAPACITY</span>
+            <h2>Destination Capacity & Transit Handoff</h2>
+            <span class="badge badge-gray">READ-ONLY FEED</span>
           </div>
 
-          <div class="capacity-section">
-            <span class="section-label">LIVE DESTINATION CAPACITY</span>
-            <p class="capacity-note">Capacity is managed by hospital administrators. ER and ambulance teams can view availability but cannot change it.</p>
+          <div class="section-gap">
+            <span class="section-kicker">LIVE DESTINATION BED CAPACITY</span>
             <div id="er-bed-status-list">
               <!-- Rendered via JS -->
             </div>
           </div>
 
-          <span class="section-label">TRANSIT TIMELINE LOG</span>
+          <span class="section-kicker">TRANSIT TIMELINE LOG</span>
           <div class="timeline-track">
             <div class="timeline-step completed">
               <strong>DISPATCH</strong>
@@ -458,11 +569,11 @@
           </div>
 
           <div class="scan-card">
-            <h3 class="scan-title">Scan Transfer QR Code at ER Entrance</h3>
-            <p class="scan-description">Pull full paramedic intake log, vitals history, and medicine notes into hospital EHR system.</p>
+            <h3 class="scan-title">Scan Paramedic QR at ER Gate</h3>
+            <p class="scan-description">Ingest full paramedic intake log, vitals telemetry, and OCR medicine records into hospital EHR system.</p>
             <button class="btn-primary" id="scan-qr-btn">📷 Scan Paramedic QR Code</button>
-            <div id="scan-result-box" class="scan-result is-hidden">
-              ✓ QR Code Scanned! Patient GH-2048 transferred to ER EHR. Treatment status updated to ACTIVE.
+            <div id="scan-result-box" class="scan-result hidden">
+              ✓ QR Handshake Verified! Patient GH-2048 transferred to EHR. Treatment status updated to ACTIVE.
             </div>
           </div>
         </div>
@@ -470,7 +581,7 @@
       </section>
 
       <!-- ==================== 3. HOSPITAL ADMIN PANEL ==================== -->
-      <section class="pane-hospital-admin">
+      <section class="pane-hospital-admin" aria-label="Hospital Resource Administration">
         <div class="card">
           <div class="card-header">
             <h2>🏥 CityCare Central Hospital Administration Panel</h2>
@@ -481,44 +592,44 @@
           <div class="stat-grid">
             <div class="stat-card">
               <span>TOTAL AVAILABLE CAPACITY</span>
-              <strong id="admin-total-beds">18 Available</strong>
+              <strong id="admin-total-beds" class="text-teal-light">18 Available</strong>
             </div>
             <div class="stat-card">
-              <span>ICU CAPACITY</span>
-              <strong>85% Occupied</strong>
+              <span>ICU OCCUPANCY</span>
+              <strong class="text-orange-light">85% Occupied</strong>
             </div>
             <div class="stat-card">
               <span>ACTIVE EN-ROUTE</span>
-              <strong>1 Ambulance</strong>
+              <strong class="text-teal-light">1 Ambulance</strong>
             </div>
             <div class="stat-card">
               <span>AVG HANDOFF TIME</span>
-              <strong class="teal-value">4.2 Minutes</strong>
+              <strong class="text-green-light">4.2 Minutes</strong>
             </div>
           </div>
 
           <!-- Department Bed Allocation Table -->
-          <h3 class="admin-heading admin-heading-first">Hospital Department Capacity Management</h3>
+          <h3 class="admin-heading">Hospital Department Capacity Management</h3>
           <div class="table-scroll">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Department / Unit</th>
-                <th>Specialty Match</th>
-                <th>Available Beds</th>
-                <th>Status</th>
-                <th>Admin Actions</th>
-              </tr>
-            </thead>
-            <tbody id="hospital-admin-beds-tbody">
-              <!-- Rendered dynamically via app.js -->
-            </tbody>
-          </table>
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Department / Unit</th>
+                  <th>Specialty Match</th>
+                  <th>Available Beds</th>
+                  <th>Status</th>
+                  <th>Live Admin Adjustment</th>
+                </tr>
+              </thead>
+              <tbody id="hospital-admin-beds-tbody">
+                <!-- Rendered dynamically via JS -->
+              </tbody>
+            </table>
           </div>
 
           <!-- Specialist Doctors On Call -->
           <h3 class="admin-heading">On-Call Specialist Team Status</h3>
-          <div class="responsive-grid responsive-grid-3">
+          <div class="specialist-grid">
             <div class="specialist-card">
               <strong class="specialist-name">Dr. Robert Chen</strong>
               <span class="specialist-role">Chief Trauma Surgeon</span>
@@ -536,54 +647,54 @@
             </div>
           </div>
 
-          <!-- Incoming Emergency Queue: limited to records routed to this hospital -->
-          <h3 class="admin-heading">Incoming Emergency Queue (CityCare Only)</h3>
+          <!-- Incoming Emergency Queue -->
+          <h3 class="admin-heading">Incoming Emergency Queue (CityCare Level 1)</h3>
           <div class="table-scroll">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Patient ID</th>
-                <th>Paramedic Unit</th>
-                <th>Vitals Severity</th>
-                <th>ETA</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong id="admin-queue-patient-id">GH-2048</strong></td>
-                <td>Unit 04 (Marcus)</td>
-                <td><span class="badge badge-red" id="admin-queue-severity">NEWS2: 0 (Stable)</span></td>
-                <td id="admin-queue-eta">08 Min</td>
-                <td>
-                  <button class="btn-primary table-action" onclick="showToast('Assigned Bay 1 & Notified Dr. Chen')">Assign Bay 1</button>
-                  <button class="btn-secondary table-action" onclick="showToast('Rerouted to Green Valley Hospital')">Divert</button>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Patient ID</th>
+                  <th>Paramedic Unit</th>
+                  <th>Triage Severity</th>
+                  <th>ETA</th>
+                  <th>Admin Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong id="admin-queue-patient-id" class="mono text-teal-light">GH-2048</strong></td>
+                  <td>Unit 04 (Marcus Vance)</td>
+                  <td><span class="badge badge-teal" id="admin-queue-severity">NEWS2: 0 (Stable)</span></td>
+                  <td id="admin-queue-eta" class="mono">08 Min</td>
+                  <td>
+                    <button class="btn-primary table-action" onclick="HospitalAdmin.assignBay('GH-2048', 1)">Assign Bay 1</button>
+                    <button class="btn-secondary table-action" onclick="HospitalAdmin.divertPatient('GH-2048')">Divert</button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
 
-      <!-- ==================== 4. PATIENT & AMBULANCE OPERATIONS ==================== -->
-      <section class="pane-patient-admin">
+      <!-- ==================== 4. PATIENT & FLEET OPERATIONS ==================== -->
+      <section class="pane-patient-admin" aria-label="Fleet and Patient Operations">
         <div class="card">
           <div class="card-header">
             <h2>🚑 Patient & Ambulance Operations Center</h2>
-            <span class="badge badge-teal">DISPATCH CONTROL</span>
+            <span class="badge badge-teal">FLEET DISPATCH CONTROL</span>
           </div>
 
           <!-- Fleet Units Grid -->
-          <h3 class="admin-heading admin-heading-zero">Active Ambulance Fleet Matrix</h3>
-          <div class="responsive-grid responsive-grid-4 fleet-grid">
+          <h3 class="admin-heading">Active Ambulance Fleet Matrix</h3>
+          <div class="fleet-grid">
             <div class="fleet-card">
               <div class="fleet-card-header">
                 <strong>UNIT 01</strong>
                 <span class="badge badge-teal">AVAILABLE</span>
               </div>
               <span class="fleet-detail">Paramedic: Alex Miller</span>
-              <span class="fleet-detail fleet-location">Station: Base North</span>
+              <span class="fleet-location">Station: Base North</span>
             </div>
 
             <div class="fleet-card fleet-card-active">
@@ -592,7 +703,7 @@
                 <span class="badge badge-orange">EN ROUTE</span>
               </div>
               <span class="fleet-detail">Paramedic: Marcus Vance</span>
-              <span class="fleet-detail fleet-location">Patient: GH-2048</span>
+              <span class="fleet-location">Patient: GH-2048 (Trauma)</span>
             </div>
 
             <div class="fleet-card">
@@ -601,7 +712,7 @@
                 <span class="badge badge-teal">AVAILABLE</span>
               </div>
               <span class="fleet-detail">Paramedic: Sarah Jenkins</span>
-              <span class="fleet-detail fleet-location">Station: Base South</span>
+              <span class="fleet-location">Station: Base South</span>
             </div>
 
             <div class="fleet-card">
@@ -610,13 +721,13 @@
                 <span class="badge badge-gray">MAINTENANCE</span>
               </div>
               <span class="fleet-detail">Paramedic: Unassigned</span>
-              <span class="fleet-detail fleet-location">Service: Depot 2</span>
+              <span class="fleet-location">Service: Depot 2</span>
             </div>
           </div>
 
           <!-- Incident Dispatch Simulator -->
-          <h3 class="admin-heading admin-heading-zero">Dispatch New Emergency Incident Call</h3>
-          <form id="dispatch-form" class="dispatch-form">
+          <h3 class="admin-heading">Dispatch New Emergency Call</h3>
+          <form id="dispatch-form" class="dispatch-box">
             <div class="form-grid">
               <div class="form-group">
                 <label for="dispatch-loc">Incident Location</label>
@@ -625,8 +736,8 @@
               <div class="form-group">
                 <label for="dispatch-sev">Severity Category</label>
                 <select id="dispatch-sev">
-                  <option value="high">Priority 1 (Red - Critical Trauma)</option>
-                  <option value="med">Priority 2 (Yellow - Moderate)</option>
+                  <option value="high">Priority 1 (Red - Critical Emergency)</option>
+                  <option value="med">Priority 2 (Yellow - Moderate Urgency)</option>
                   <option value="low">Priority 3 (Green - Non-Urgent)</option>
                 </select>
               </div>
@@ -643,47 +754,42 @@
             </div>
           </form>
 
-          <!-- Patient Registry Directory -->
-          <h3 class="admin-heading admin-heading-zero">Global Patient Emergency Registry</h3>
+          <!-- Patient Registry Directory with Search and Filter Toolbar -->
+          <div class="card-header registry-heading">
+            <h2>Global Patient Emergency Registry</h2>
+            <button class="btn-secondary" onclick="ExportReport.generateReport(AppState.get().patient.id)">
+              📄 Export Active Patient Record
+            </button>
+          </div>
+
+          <div class="registry-toolbar">
+            <input type="text" id="registry-search-input" class="registry-search" placeholder="🔍 Search by Patient ID, Name, Condition, or Hospital..." />
+            <label for="registry-filter-select" class="sr-only">Filter patients by triage severity</label>
+            <select id="registry-filter-select" class="registry-filter">
+              <option value="all">All Triage Severities</option>
+              <option value="critical">Critical Only</option>
+              <option value="moderate">Moderate Only</option>
+              <option value="stable">Stable Only</option>
+            </select>
+          </div>
+
           <div class="table-scroll">
-          <table class="admin-table">
-            <thead>
-              <tr>
-                <th>Patient ID</th>
-                <th>Age</th>
-                <th>Injury / Category</th>
-                <th>NEWS2 Score</th>
-                <th>Destination Hospital</th>
-                <th>Handoff Log</th>
-              </tr>
-            </thead>
-            <tbody id="patient-registry-tbody">
-              <tr>
-                <td><strong id="registry-active-id">GH-2048</strong></td>
-                <td id="registry-active-age">42</td>
-                <td id="registry-active-injury">Roadside Accident (Trauma)</td>
-                <td><span class="badge badge-teal" id="registry-gh2048-score">0 (Stable)</span></td>
-                <td id="registry-active-destination">CityCare Trauma Centre</td>
-                <td><button class="btn-secondary table-action" onclick="showToast('Downloaded PDF Transit Log for GH-2048')">📄 Export Log</button></td>
-              </tr>
-              <tr>
-                <td><strong>GH-2047</strong></td>
-                <td>68</td>
-                <td>Acute Cardiac Arrest</td>
-                <td><span class="badge badge-red">8 (Critical)</span></td>
-                <td>Northside Medical</td>
-                <td><button class="btn-secondary table-action" onclick="showToast('Downloaded PDF Transit Log for GH-2047')">📄 Export Log</button></td>
-              </tr>
-              <tr>
-                <td><strong>GH-2046</strong></td>
-                <td>31</td>
-                <td>Closed Femur Fracture</td>
-                <td><span class="badge badge-teal">1 (Low Risk)</span></td>
-                <td>Green Valley Hospital</td>
-                <td><button class="btn-secondary table-action" onclick="showToast('Downloaded PDF Transit Log for GH-2046')">📄 Export Log</button></td>
-              </tr>
-            </tbody>
-          </table>
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Patient ID</th>
+                  <th>Name / Age</th>
+                  <th>Emergency Condition</th>
+                  <th>Triage Score</th>
+                  <th>Destination Hospital</th>
+                  <th>Transit Status</th>
+                  <th>Clinical EHR</th>
+                </tr>
+              </thead>
+              <tbody id="patient-registry-tbody">
+                <!-- Rendered dynamically via FleetOps.js -->
+              </tbody>
+            </table>
           </div>
         </div>
       </section>
@@ -691,10 +797,64 @@
     </div>
   </main>
 
-  <!-- Notification Toast -->
-  <div id="toast" class="toast"></div>
+  <!-- ==================== MOBILE BOTTOM NAVIGATION BAR ==================== -->
+  <nav class="mobile-bottom-nav" aria-label="Mobile Navigation">
+    <button class="bottom-nav-item" data-mode="overview">
+      <span class="nav-icon">📡</span>
+      <span>Overview</span>
+    </button>
+    <button class="bottom-nav-item active" data-mode="paramedic">
+      <span class="nav-icon">🚑</span>
+      <span>Paramedic</span>
+    </button>
+    <button class="bottom-nav-fab" onclick="VoiceEngine.toggleListening()" title="Voice Dictate Vitals">
+      🎙️
+    </button>
+    <button class="bottom-nav-item" data-mode="er">
+      <span class="nav-icon">🏥</span>
+      <span>ER Monitor</span>
+    </button>
+    <button class="bottom-nav-item" data-mode="patient-admin">
+      <span class="nav-icon">🚨</span>
+      <span>Fleet</span>
+    </button>
+  </nav>
 
-  <!-- Application Logic -->
-  <script src="app.js"></script>
+  <!-- ==================== NOTIFICATION TOAST ==================== -->
+  <div id="toast" class="toast" role="alert" aria-live="polite"></div>
+
+  <!-- ==================== MODALS & OVERLAYS ==================== -->
+
+  <!-- 1. Clinical NEWS2 Breakdown Modal -->
+  <div id="clinical-modal-backdrop" class="modal-backdrop" onclick="if(event.target === this) this.classList.remove('active')">
+    <div class="modal-card">
+      <div id="clinical-modal-body"></div>
+      <div class="modal-actions">
+        <button class="btn-secondary" onclick="document.getElementById('clinical-modal-backdrop').classList.remove('active')">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Printable Clinical Handoff EHR Modal -->
+  <div id="report-modal-backdrop" class="modal-backdrop" onclick="if(event.target === this) this.classList.remove('active')">
+    <div class="modal-card modal-card-wide">
+      <div id="report-modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ==================== APPLICATION SCRIPTS ==================== -->
+  <script src="js/state.js" defer></script>
+  <script src="js/triage.js" defer></script>
+  <script src="js/ecg.js" defer></script>
+  <script src="js/audio.js" defer></script>
+  <script src="js/voice.js" defer></script>
+  <script src="js/ocr.js" defer></script>
+  <script src="js/routing.js" defer></script>
+  <script src="js/hospitalAdmin.js" defer></script>
+  <script src="js/fleetOps.js" defer></script>
+  <script src="js/exportReport.js" defer></script>
+  <script src="js/telemetry.js" defer></script>
+  <script src="js/ui.js" defer></script>
+  <script src="js/app.js" defer></script>
 </body>
 </html>
