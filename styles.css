@@ -56,6 +56,117 @@ button:active {
   transform: scale(0.98);
 }
 
+/* Utility and extracted page styles */
+.text-right { text-align: right; }
+.label-muted {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 700;
+  display: block;
+}
+.preset-section { margin-bottom: 12px; }
+.preset-label { margin-bottom: 6px; }
+.countdown { font-size: 20px; color: var(--orange); }
+.voice-select { flex: 1; padding: 8px !important; }
+.control-label { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.badge-route { background: rgba(20, 184, 166, 0.2); color: #2dd4bf; }
+.ocr-prompt { font-size: 13px; color: var(--muted); display: block; }
+#medicine-file { display: none; }
+.ocr-preview.is-hidden,
+.is-hidden { display: none; }
+.ocr-details { text-align: left; flex: 1; }
+.ocr-title { font-size: 13px; color: var(--teal-dark); }
+.ocr-text { font-size: 11px; color: var(--muted); margin: 2px 0 0; }
+.score-title { font-size: 14px; display: block; }
+.score-description { font-size: 11px; color: var(--muted); }
+.news-value { color: var(--teal); }
+.handoff-card { text-align: center; }
+.handoff-description { font-size: 13px; color: var(--muted); margin-top: 0; }
+.qr-modal-area { margin-top: 16px; }
+.qr-token { color: var(--muted); font-size: 11px; display: block; margin-top: 6px; }
+.critical-title { font-size: 16px; display: block; }
+.critical-reason { font-size: 12px; opacity: 0.9; }
+.badge-priority { background: #ffffff; color: var(--red); }
+.telemetry-label,
+.detail-label { font-size: 11px; color: var(--muted); display: block; }
+.telemetry-value { font-size: 18px; color: var(--teal-dark); }
+.patient-id-value { font-size: 16px; }
+.unit-label { font-size: 11px; font-weight: normal; }
+.detail-label { font-weight: 700; margin-bottom: 4px; }
+.detail-value { font-size: 13px; font-weight: 600; }
+.detail-value-bold { font-weight: 700; }
+.news-display { color: var(--teal-dark); }
+.injury-note {
+  margin-top: 12px;
+  padding: 10px;
+  background: var(--cream);
+  border: 1px solid #fef3c7;
+  border-radius: 8px;
+  font-size: 12px;
+  color: #92400e;
+}
+.eta-countdown { font-size: 18px; color: var(--teal-dark); }
+.signal-clear { color: #4ade80; }
+.signal-clearing { color: #facc15; }
+.capacity-section { margin-bottom: 18px; }
+.section-label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--muted);
+  display: block;
+  margin-bottom: 8px;
+}
+.scan-card {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+}
+.scan-title { margin: 0 0 6px; font-size: 14px; }
+.scan-description { font-size: 12px; color: var(--muted); margin: 0 0 12px; }
+.scan-result {
+  margin-top: 12px;
+  padding: 10px;
+  background: var(--teal-light);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--teal-dark);
+  font-weight: 600;
+}
+.teal-value { color: var(--teal-dark); }
+.admin-heading { font-size: 15px; margin: 24px 0 10px; }
+.admin-heading-first { margin-top: 20px; }
+.admin-heading-zero { margin-top: 0; }
+.specialist-card {
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #ffffff;
+}
+.specialist-name { display: block; font-size: 14px; }
+.specialist-role { font-size: 12px; color: var(--muted); }
+.specialist-status { display: inline-block; margin-top: 6px; }
+.fleet-grid { margin-bottom: 24px; }
+.fleet-card {
+  padding: 14px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #ffffff;
+}
+.fleet-card-active { border-color: var(--teal); background: var(--aqua); }
+.fleet-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+.fleet-detail { font-size: 12px; color: var(--muted); display: block; }
+.fleet-location { font-size: 11px; margin-top: 4px; }
+.dispatch-form {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 24px;
+}
+.dispatch-actions { text-align: right; margin-top: 12px; }
+
 /* Application Layout */
 .app-header {
   background: #ffffff;
@@ -863,7 +974,6 @@ button:active {
 .table-scroll {
   width: 100%;
   overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
 }
 
 .table-scroll .admin-table {
@@ -1172,7 +1282,6 @@ button:active {
     overflow-x: auto;
     overscroll-behavior-x: contain;
     scroll-snap-type: x proximity;
-    scrollbar-width: none;
   }
 
   .view-switcher::-webkit-scrollbar {

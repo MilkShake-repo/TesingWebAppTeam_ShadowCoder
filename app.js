@@ -2,7 +2,7 @@
 
 // --- 1. State & Data Models ---
 const state = {
-  activeMode: 'overview', // 'overview', 'paramedic', 'er', 'hospital-admin', 'patient-admin'
+  activeMode: 'paramedic', // 'overview', 'paramedic', 'er', 'hospital-admin', 'patient-admin'
   patient: {
     id: 'GH-2048',
     age: 42,

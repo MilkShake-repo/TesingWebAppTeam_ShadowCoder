@@ -3,11 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0f766e" />
   <title>Golden Hour — Smart Emergency & Hospital Admin</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
-<body class="mode-overview">
+<body class="mode-paramedic">
   <!-- Application Header -->
   <header class="app-header">
     <div class="brand">
@@ -20,8 +19,8 @@
 
     <div class="header-controls">
       <div class="view-switcher">
-        <button class="view-btn active pc-only-tab" data-mode="overview">Command Overview</button>
-        <button class="view-btn" data-mode="paramedic">Paramedic Unit</button>
+        <button class="view-btn pc-only-tab" data-mode="overview">Command Overview</button>
+        <button class="view-btn active" data-mode="paramedic">Paramedic Unit</button>
         <button class="view-btn" data-mode="er">ER Dashboard</button>
         <button class="view-btn" data-mode="hospital-admin">🏥 Hospital Admin</button>
         <button class="view-btn" data-mode="patient-admin">🚑 Patient & Fleet Ops</button>
@@ -90,7 +89,7 @@
               <div class="map-container overview-map">
                 <div class="map-route-heading">
                   <span>Unit 04 to <strong id="overview-target-hospital">CityCare Trauma Centre</strong></span>
-                  <span class="badge badge-teal" style="background: rgba(20, 184, 166, 0.2); color: #2dd4bf;">PRIORITY ROUTE</span>
+                  <span class="badge badge-teal badge-route">PRIORITY ROUTE</span>
                 </div>
 
                 <svg class="map-svg" viewBox="0 0 600 240" aria-label="Priority ambulance route map">
@@ -157,15 +156,15 @@
         <div class="card">
           <div class="card-header">
             <h2><span class="badge badge-teal">PARAMEDIC UNIT 04</span> Patient Intake</h2>
-            <div style="text-align: right;">
-              <small style="color: var(--muted); font-size: 11px; display: block;">GOLDEN HOUR WINDOW</small>
-              <strong id="paramedic-countdown" style="font-size: 20px; color: var(--orange);">59:45</strong>
+            <div class="text-right">
+              <small class="label-muted">GOLDEN HOUR WINDOW</small>
+              <strong id="paramedic-countdown" class="countdown">59:45</strong>
             </div>
           </div>
 
           <!-- Single-Tap Presets -->
-          <div style="margin-bottom: 12px;">
-            <span style="font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 6px;">SINGLE-TAP CASE PRESETS</span>
+          <div class="preset-section">
+            <span class="label-muted preset-label">SINGLE-TAP CASE PRESETS</span>
             <div class="preset-group">
               <button class="preset-chip" data-preset="fracture">🦴 Fracture (Stable)</button>
               <button class="preset-chip" data-preset="chest">🫀 Chest Pain (Moderate)</button>
@@ -176,7 +175,8 @@
           <!-- Voice Input Bar -->
           <div class="voice-bar">
             <button type="button" class="btn-primary" id="voice-btn">🎙 Start Voice Input</button>
-            <select id="simulated-voice-select" class="form-group" style="flex: 1; padding: 8px;">
+            <label for="simulated-voice-select" class="control-label">Test voice phrase</label>
+            <select id="simulated-voice-select" class="form-group voice-select">
               <option value="">-- Or Select Test Voice Phrase --</option>
               <option value="heart rate 118, spo2 91, breathing rate 24, temp 38.2">"Heart rate 118, oxygen 91, breathing 24, temp 38.2"</option>
               <option value="spo2 88, sbp 85, gcs 7, unconscious collision">"SpO2 88, blood pressure 85, GCS 7, unconscious collision"</option>
@@ -244,15 +244,15 @@
 
               <!-- Medicine Photo OCR Section -->
               <div class="form-group full">
-                <label>Medicine Bottle Photo / OCR Extract</label>
+                <label for="medicine-file">Medicine Bottle Photo / OCR Extract</label>
                 <div class="ocr-box" id="ocr-box-container">
-                  <span style="font-size: 13px; color: var(--muted); display: block;">📷 Click or Drop Medicine Photo for instant OCR Scanning</span>
-                  <input type="file" id="medicine-file" accept="image/*" style="display: none;" />
-                  <div class="ocr-preview" id="ocr-preview-area" style="display: none;">
+                  <span class="ocr-prompt">📷 Click or Drop Medicine Photo for instant OCR Scanning</span>
+                  <input type="file" id="medicine-file" accept="image/*" />
+                  <div class="ocr-preview is-hidden" id="ocr-preview-area">
                     <img id="ocr-img-thumb" src="assets/vitals.jpg" alt="Pill container preview" />
-                    <div style="text-align: left; flex: 1;">
-                      <strong style="font-size: 13px; color: var(--teal-dark);" id="ocr-detected-title">Scanning Medicine Bottle…</strong>
-                      <p style="font-size: 11px; color: var(--muted); margin: 2px 0 0;" id="ocr-detected-text">Extracting active compounds via OCR API</p>
+                    <div class="ocr-details">
+                      <strong class="ocr-title" id="ocr-detected-title">Scanning Medicine Bottle…</strong>
+                      <p class="ocr-text" id="ocr-detected-text">Extracting active compounds via OCR API</p>
                     </div>
                   </div>
                 </div>
@@ -262,8 +262,8 @@
             <!-- NEWS2 Breakdown -->
             <div class="score-box" id="paramedic-score-box">
               <div>
-                <strong style="font-size: 14px; display: block;" id="score-status-title">Clinical Risk Assessment</strong>
-                <span style="font-size: 11px; color: var(--muted);" id="score-status-desc">NEWS2 Indicator calculated continuously</span>
+                <strong class="score-title" id="score-status-title">Clinical Risk Assessment</strong>
+                <span class="score-description" id="score-status-desc">NEWS2 Indicator calculated continuously</span>
               </div>
               <div class="score-metrics">
                 <div class="score-val">
@@ -271,7 +271,7 @@
                   <span>GCS</span>
                 </div>
                 <div class="score-val">
-                  <strong id="news-val" style="color: var(--teal);">0</strong>
+                  <strong id="news-val" class="news-value">0</strong>
                   <span>NEWS2</span>
                 </div>
               </div>
@@ -291,18 +291,18 @@
         </div>
 
         <!-- Digital Handoff QR -->
-        <div class="card" style="text-align: center;">
+        <div class="card handoff-card">
           <div class="card-header">
             <h2>Digital Transit Handoff</h2>
             <span class="badge badge-orange">QR SYNC</span>
           </div>
-          <p style="font-size: 13px; color: var(--muted); margin-top: 0;">Generate instant transfer QR code to sync full log into hospital electronic records on arrival.</p>
+          <p class="handoff-description">Generate instant transfer QR code to sync full log into hospital electronic records on arrival.</p>
           <button class="btn-primary" id="generate-qr-btn">▦ Generate Transfer QR Code</button>
           
-          <div id="qr-modal-area" style="margin-top: 16px; display: none;">
+          <div id="qr-modal-area" class="qr-modal-area is-hidden">
             <div class="qr-display">
               <div id="qr-svg-holder"></div>
-              <small style="color: var(--muted); font-size: 11px; display: block; margin-top: 6px;">Encrypted Transit Token: GH-2048-DATA-SYNC</small>
+              <small class="qr-token">Encrypted Transit Token: GH-2048-DATA-SYNC</small>
             </div>
           </div>
         </div>
@@ -313,12 +313,12 @@
       <section class="pane-er">
         
         <!-- Flashing Critical Alert State Banner -->
-        <div id="er-critical-banner" class="er-critical-alert" style="display: none;">
+        <div id="er-critical-banner" class="er-critical-alert is-hidden">
           <div>
-            <strong style="font-size: 16px; display: block;">🚨 CRITICAL PATIENT ALERT — HIGH RISK TELEMETRY</strong>
-            <span style="font-size: 12px; opacity: 0.9;" id="er-critical-reason">GCS Score 8 (Severe) · NEWS2 Score 7. Prepare Trauma Bay 1 immediately!</span>
+            <strong class="critical-title">🚨 CRITICAL PATIENT ALERT — HIGH RISK TELEMETRY</strong>
+            <span class="critical-reason" id="er-critical-reason">GCS Score 8 (Severe) · NEWS2 Score 7. Prepare Trauma Bay 1 immediately!</span>
           </div>
-          <span class="badge" style="background: white; color: var(--red);">PRIORITY RED</span>
+          <span class="badge badge-priority">PRIORITY RED</span>
         </div>
 
         <!-- Live Telemetry Monitor Card -->
@@ -330,39 +330,39 @@
 
           <div class="er-vitals-grid">
             <div>
-              <span style="font-size: 11px; color: var(--muted); display: block;">PATIENT ID</span>
-              <strong id="er-patient-id" style="font-size: 16px;">GH-2048</strong>
+              <span class="telemetry-label">PATIENT ID</span>
+              <strong id="er-patient-id" class="patient-id-value">GH-2048</strong>
             </div>
             <div>
-              <span style="font-size: 11px; color: var(--muted); display: block;">HEART RATE</span>
-              <strong id="er-hr" style="font-size: 18px; color: var(--teal-dark);">84 <small style="font-size: 11px; font-weight: normal;">bpm</small></strong>
+              <span class="telemetry-label">HEART RATE</span>
+              <strong id="er-hr" class="telemetry-value">84 <small class="unit-label">bpm</small></strong>
             </div>
             <div>
-              <span style="font-size: 11px; color: var(--muted); display: block;">SpO₂ OXYGEN</span>
-              <strong id="er-spo2" style="font-size: 18px; color: var(--teal-dark);">98%</strong>
+              <span class="telemetry-label">SpO₂ OXYGEN</span>
+              <strong id="er-spo2" class="telemetry-value">98%</strong>
             </div>
             <div>
-              <span style="font-size: 11px; color: var(--muted); display: block;">BLOOD PRESSURE</span>
-              <strong id="er-bp" style="font-size: 18px; color: var(--teal-dark);">122/80</strong>
+              <span class="telemetry-label">BLOOD PRESSURE</span>
+              <strong id="er-bp" class="telemetry-value">122/80</strong>
             </div>
           </div>
 
           <div class="er-detail-grid">
             <div>
-              <span style="font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 4px;">RESPIRATION & TEMP</span>
-              <div style="font-size: 13px; font-weight: 600;">
+              <span class="detail-label">RESPIRATION & TEMP</span>
+              <div class="detail-value">
                 Resp: <span id="er-rr">16</span>/min · Temp: <span id="er-temp">36.8</span>°C
               </div>
             </div>
             <div>
-              <span style="font-size: 11px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 4px;">CLINICAL SCORE STATUS</span>
-              <div style="font-size: 13px; font-weight: 700;">
-                GCS: <span id="er-gcs-display">15</span> · NEWS2 Score: <span id="er-news-display" style="color: var(--teal-dark);">0 (Low Risk)</span>
+              <span class="detail-label">CLINICAL SCORE STATUS</span>
+              <div class="detail-value detail-value-bold">
+                GCS: <span id="er-gcs-display">15</span> · NEWS2 Score: <span id="er-news-display" class="news-display">0 (Low Risk)</span>
               </div>
             </div>
           </div>
 
-          <div style="margin-top: 12px; padding: 10px; background: #fffbeb; border: 1px solid #fef3c7; border-radius: 8px; font-size: 12px; color: #92400e;">
+          <div class="injury-note">
             <strong>Injury / Notes:</strong> <span id="er-notes-display">Roadside accident. Patient conscious, complaining of acute localized pain.</span>
           </div>
         </div>
@@ -371,16 +371,16 @@
         <div class="card">
           <div class="card-header">
             <h2>Active Route & Traffic Priority Corridor</h2>
-            <div style="text-align: right;">
-              <small style="color: var(--muted); font-size: 11px; display: block;">DESTINATION ETA</small>
-              <strong id="er-eta-countdown" style="font-size: 18px; color: var(--teal-dark);">08 min 12s</strong>
+            <div class="text-right">
+              <small class="label-muted">DESTINATION ETA</small>
+              <strong id="er-eta-countdown" class="eta-countdown">08 min 12s</strong>
             </div>
           </div>
 
           <div class="map-container">
             <div class="map-route-heading">
               <span>🚑 Ambulance Unit 04 → <strong id="er-target-hospital-name">CityCare Trauma Centre</strong></span>
-              <span class="badge badge-teal" style="background: rgba(20, 184, 166, 0.2); color: #2dd4bf;">TRAFFIC LIGHTS CLEARED</span>
+              <span class="badge badge-teal badge-route">TRAFFIC LIGHTS CLEARED</span>
             </div>
             
             <svg class="map-svg" viewBox="0 0 600 240" id="route-map-svg">
@@ -415,9 +415,9 @@
             </svg>
 
             <div class="map-signal-list">
-              <span style="color: #4ade80;">🚦 Signal #1 (Main St): CLEARED</span>
-              <span style="color: #4ade80;">🚦 Signal #2 (Park Ave): CLEARED</span>
-              <span style="color: #facc15;">🚦 Signal #3 (ER Entry): CLEARING IN 30s</span>
+              <span class="signal-clear">🚦 Signal #1 (Main St): CLEARED</span>
+              <span class="signal-clear">🚦 Signal #2 (Park Ave): CLEARED</span>
+              <span class="signal-clearing">🚦 Signal #3 (ER Entry): CLEARING IN 30s</span>
             </div>
           </div>
         </div>
@@ -429,15 +429,15 @@
             <span class="badge badge-gray">READ-ONLY CAPACITY</span>
           </div>
 
-          <div style="margin-bottom: 18px;">
-            <span style="font-size: 12px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 8px;">LIVE DESTINATION CAPACITY</span>
+          <div class="capacity-section">
+            <span class="section-label">LIVE DESTINATION CAPACITY</span>
             <p class="capacity-note">Capacity is managed by hospital administrators. ER and ambulance teams can view availability but cannot change it.</p>
             <div id="er-bed-status-list">
               <!-- Rendered via JS -->
             </div>
           </div>
 
-          <span style="font-size: 12px; font-weight: 700; color: var(--muted); display: block; margin-bottom: 8px;">TRANSIT TIMELINE LOG</span>
+          <span class="section-label">TRANSIT TIMELINE LOG</span>
           <div class="timeline-track">
             <div class="timeline-step completed">
               <strong>DISPATCH</strong>
@@ -457,11 +457,11 @@
             </div>
           </div>
 
-          <div style="background: #f8fafc; border: 1px solid var(--line); border-radius: 12px; padding: 16px; text-align: center;">
-            <h3 style="margin: 0 0 6px; font-size: 14px;">Scan Transfer QR Code at ER Entrance</h3>
-            <p style="font-size: 12px; color: var(--muted); margin: 0 0 12px;">Pull full paramedic intake log, vitals history, and medicine notes into hospital EHR system.</p>
+          <div class="scan-card">
+            <h3 class="scan-title">Scan Transfer QR Code at ER Entrance</h3>
+            <p class="scan-description">Pull full paramedic intake log, vitals history, and medicine notes into hospital EHR system.</p>
             <button class="btn-primary" id="scan-qr-btn">📷 Scan Paramedic QR Code</button>
-            <div id="scan-result-box" style="display: none; margin-top: 12px; padding: 10px; background: var(--teal-light); border-radius: 8px; font-size: 12px; color: var(--teal-dark); font-weight: 600;">
+            <div id="scan-result-box" class="scan-result is-hidden">
               ✓ QR Code Scanned! Patient GH-2048 transferred to ER EHR. Treatment status updated to ACTIVE.
             </div>
           </div>
@@ -493,12 +493,12 @@
             </div>
             <div class="stat-card">
               <span>AVG HANDOFF TIME</span>
-              <strong style="color: var(--teal-dark);">4.2 Minutes</strong>
+              <strong class="teal-value">4.2 Minutes</strong>
             </div>
           </div>
 
           <!-- Department Bed Allocation Table -->
-          <h3 style="font-size: 15px; margin: 20px 0 10px;">Hospital Department Capacity Management</h3>
+          <h3 class="admin-heading admin-heading-first">Hospital Department Capacity Management</h3>
           <div class="table-scroll">
           <table class="admin-table">
             <thead>
@@ -517,27 +517,27 @@
           </div>
 
           <!-- Specialist Doctors On Call -->
-          <h3 style="font-size: 15px; margin: 24px 0 10px;">On-Call Specialist Team Status</h3>
+          <h3 class="admin-heading">On-Call Specialist Team Status</h3>
           <div class="responsive-grid responsive-grid-3">
-            <div style="padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #ffffff;">
-              <strong style="display: block; font-size: 14px;">Dr. Robert Chen</strong>
-              <span style="font-size: 12px; color: var(--muted);">Chief Trauma Surgeon</span>
-              <span class="badge badge-teal" style="display: inline-block; margin-top: 6px;">ON DUTY · BAY 1</span>
+            <div class="specialist-card">
+              <strong class="specialist-name">Dr. Robert Chen</strong>
+              <span class="specialist-role">Chief Trauma Surgeon</span>
+              <span class="badge badge-teal specialist-status">ON DUTY · BAY 1</span>
             </div>
-            <div style="padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #ffffff;">
-              <strong style="display: block; font-size: 14px;">Dr. Elena Rostova</strong>
-              <span style="font-size: 12px; color: var(--muted);">Interventional Cardiologist</span>
-              <span class="badge badge-orange" style="display: inline-block; margin-top: 6px;">ON CALL (5 MIN)</span>
+            <div class="specialist-card">
+              <strong class="specialist-name">Dr. Elena Rostova</strong>
+              <span class="specialist-role">Interventional Cardiologist</span>
+              <span class="badge badge-orange specialist-status">ON CALL (5 MIN)</span>
             </div>
-            <div style="padding: 12px; border: 1px solid var(--line); border-radius: 10px; background: #ffffff;">
-              <strong style="display: block; font-size: 14px;">Dr. Marcus Vance</strong>
-              <span style="font-size: 12px; color: var(--muted);">Neurologist / Stroke Lead</span>
-              <span class="badge badge-teal" style="display: inline-block; margin-top: 6px;">ON DUTY · STROKE UNIT</span>
+            <div class="specialist-card">
+              <strong class="specialist-name">Dr. Marcus Vance</strong>
+              <span class="specialist-role">Neurologist / Stroke Lead</span>
+              <span class="badge badge-teal specialist-status">ON DUTY · STROKE UNIT</span>
             </div>
           </div>
 
           <!-- Incoming Emergency Queue: limited to records routed to this hospital -->
-          <h3 style="font-size: 15px; margin: 24px 0 10px;">Incoming Emergency Queue (CityCare Only)</h3>
+          <h3 class="admin-heading">Incoming Emergency Queue (CityCare Only)</h3>
           <div class="table-scroll">
           <table class="admin-table">
             <thead>
@@ -575,55 +575,55 @@
           </div>
 
           <!-- Fleet Units Grid -->
-          <h3 style="font-size: 15px; margin: 0 0 10px;">Active Ambulance Fleet Matrix</h3>
-          <div class="responsive-grid responsive-grid-4" style="margin-bottom: 24px;">
-            <div style="padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: #ffffff;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+          <h3 class="admin-heading admin-heading-zero">Active Ambulance Fleet Matrix</h3>
+          <div class="responsive-grid responsive-grid-4 fleet-grid">
+            <div class="fleet-card">
+              <div class="fleet-card-header">
                 <strong>UNIT 01</strong>
                 <span class="badge badge-teal">AVAILABLE</span>
               </div>
-              <span style="font-size: 12px; color: var(--muted); display: block;">Paramedic: Alex Miller</span>
-              <span style="font-size: 11px; color: var(--muted); display: block; margin-top: 4px;">Station: Base North</span>
+              <span class="fleet-detail">Paramedic: Alex Miller</span>
+              <span class="fleet-detail fleet-location">Station: Base North</span>
             </div>
 
-            <div style="padding: 14px; border: 1px solid var(--teal); border-radius: 12px; background: var(--aqua);">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div class="fleet-card fleet-card-active">
+              <div class="fleet-card-header">
                 <strong>UNIT 04</strong>
                 <span class="badge badge-orange">EN ROUTE</span>
               </div>
-              <span style="font-size: 12px; color: var(--muted); display: block;">Paramedic: Marcus Vance</span>
-              <span style="font-size: 11px; color: var(--muted); display: block; margin-top: 4px;">Patient: GH-2048</span>
+              <span class="fleet-detail">Paramedic: Marcus Vance</span>
+              <span class="fleet-detail fleet-location">Patient: GH-2048</span>
             </div>
 
-            <div style="padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: #ffffff;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div class="fleet-card">
+              <div class="fleet-card-header">
                 <strong>UNIT 07</strong>
                 <span class="badge badge-teal">AVAILABLE</span>
               </div>
-              <span style="font-size: 12px; color: var(--muted); display: block;">Paramedic: Sarah Jenkins</span>
-              <span style="font-size: 11px; color: var(--muted); display: block; margin-top: 4px;">Station: Base South</span>
+              <span class="fleet-detail">Paramedic: Sarah Jenkins</span>
+              <span class="fleet-detail fleet-location">Station: Base South</span>
             </div>
 
-            <div style="padding: 14px; border: 1px solid var(--line); border-radius: 12px; background: #ffffff;">
-              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">
+            <div class="fleet-card">
+              <div class="fleet-card-header">
                 <strong>UNIT 12</strong>
                 <span class="badge badge-gray">MAINTENANCE</span>
               </div>
-              <span style="font-size: 12px; color: var(--muted); display: block;">Paramedic: Unassigned</span>
-              <span style="font-size: 11px; color: var(--muted); display: block; margin-top: 4px;">Service: Depot 2</span>
+              <span class="fleet-detail">Paramedic: Unassigned</span>
+              <span class="fleet-detail fleet-location">Service: Depot 2</span>
             </div>
           </div>
 
           <!-- Incident Dispatch Simulator -->
-          <h3 style="font-size: 15px; margin: 0 0 10px;">Dispatch New Emergency Incident Call</h3>
-          <form id="dispatch-form" style="background: #f8fafc; border: 1px solid var(--line); padding: 16px; border-radius: 12px; margin-bottom: 24px;">
+          <h3 class="admin-heading admin-heading-zero">Dispatch New Emergency Incident Call</h3>
+          <form id="dispatch-form" class="dispatch-form">
             <div class="form-grid">
               <div class="form-group">
-                <label>Incident Location</label>
+                <label for="dispatch-loc">Incident Location</label>
                 <input id="dispatch-loc" value="Highway 101, Marker 42" required />
               </div>
               <div class="form-group">
-                <label>Severity Category</label>
+                <label for="dispatch-sev">Severity Category</label>
                 <select id="dispatch-sev">
                   <option value="high">Priority 1 (Red - Critical Trauma)</option>
                   <option value="med">Priority 2 (Yellow - Moderate)</option>
@@ -631,20 +631,20 @@
                 </select>
               </div>
               <div class="form-group">
-                <label>Assign Unit</label>
+                <label for="dispatch-unit">Assign Unit</label>
                 <select id="dispatch-unit">
                   <option value="Unit 01">Unit 01 (Paramedic Alex)</option>
                   <option value="Unit 07">Unit 07 (Paramedic Sarah)</option>
                 </select>
               </div>
             </div>
-            <div style="text-align: right; margin-top: 12px;">
+            <div class="dispatch-actions">
               <button type="submit" class="btn-primary">🚨 Dispatch Emergency Unit</button>
             </div>
           </form>
 
           <!-- Patient Registry Directory -->
-          <h3 style="font-size: 15px; margin: 0 0 10px;">Global Patient Emergency Registry</h3>
+          <h3 class="admin-heading admin-heading-zero">Global Patient Emergency Registry</h3>
           <div class="table-scroll">
           <table class="admin-table">
             <thead>
