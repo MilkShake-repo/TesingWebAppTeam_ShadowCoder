@@ -180,6 +180,10 @@ button:active {
   margin: 0 auto;
 }
 
+.mode-overview .dual-view {
+  display: block;
+}
+
 .mode-split .dual-view {
   display: grid;
   grid-template-columns: minmax(420px, 0.95fr) minmax(460px, 1.05fr);
@@ -198,13 +202,22 @@ button:active {
   gap: 0;
 }
 
+.mode-overview .pane-paramedic,
+.mode-overview .pane-er,
+.mode-overview .pane-hospital-admin,
+.mode-overview .pane-patient-admin {
+  display: none !important;
+}
+
 .mode-paramedic .pane-er,
+.mode-paramedic .pane-overview,
 .mode-paramedic .pane-hospital-admin,
 .mode-paramedic .pane-patient-admin {
   display: none !important;
 }
 
 .mode-er .pane-paramedic,
+.mode-er .pane-overview,
 .mode-er .pane-hospital-admin,
 .mode-er .pane-patient-admin {
   display: none !important;
@@ -212,12 +225,14 @@ button:active {
 
 .mode-hospital-admin .pane-paramedic,
 .mode-hospital-admin .pane-er,
+.mode-hospital-admin .pane-overview,
 .mode-hospital-admin .pane-patient-admin {
   display: none !important;
 }
 
 .mode-patient-admin .pane-paramedic,
 .mode-patient-admin .pane-er,
+.mode-patient-admin .pane-overview,
 .mode-patient-admin .pane-hospital-admin {
   display: none !important;
 }
@@ -255,6 +270,178 @@ button:active {
   position: sticky;
   top: 86px;
   z-index: 20;
+}
+
+/* PC Command Overview */
+.pane-overview {
+  max-width: 1500px;
+  margin: 0 auto;
+}
+
+.overview-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(300px, 0.75fr);
+  gap: clamp(16px, 2vw, 24px);
+  min-height: calc(100vh - 124px);
+}
+
+.overview-main,
+.overview-side {
+  display: grid;
+  gap: 16px;
+}
+
+.overview-main {
+  grid-template-rows: auto minmax(0, 1fr);
+}
+
+.overview-side {
+  align-content: start;
+}
+
+.overview-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: clamp(16px, 1.6vw, 22px);
+  min-width: 0;
+}
+
+.overview-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.overview-panel-header h2 {
+  margin: 3px 0 0;
+  font-size: clamp(18px, 2vw, 26px);
+  line-height: 1.1;
+}
+
+.section-kicker {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+}
+
+.overview-vitals {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.overview-vitals > div,
+.overview-hospital-meta > div {
+  background: #f8fafc;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  min-width: 0;
+}
+
+.overview-vitals span,
+.overview-hospital-meta span,
+.overview-note span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.overview-vitals strong {
+  display: block;
+  color: var(--teal-dark);
+  font-size: clamp(26px, 3vw, 42px);
+  line-height: 1;
+  margin-top: 8px;
+}
+
+.overview-vitals small {
+  display: block;
+  color: var(--muted);
+  margin-top: 5px;
+}
+
+.overview-note {
+  margin-top: 14px;
+  padding: 14px;
+  border-radius: 8px;
+  background: var(--cream);
+  border: 1px solid #fef3c7;
+}
+
+.overview-note p,
+.overview-panel > p {
+  margin: 6px 0 0;
+  color: var(--ink);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.overview-map-panel {
+  min-height: 0;
+}
+
+.overview-map,
+.overview-map .map-svg {
+  height: 100%;
+}
+
+.overview-map .map-svg {
+  min-height: 360px;
+}
+
+.overview-hospital-meta {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.overview-hospital-meta strong {
+  display: block;
+  margin-top: 6px;
+  color: var(--teal-dark);
+  font-size: 18px;
+}
+
+.overview-hospital-list {
+  display: grid;
+  gap: 8px;
+}
+
+.overview-hospital-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #ffffff;
+}
+
+.overview-hospital-row.selected {
+  border-color: var(--teal);
+  background: var(--aqua);
+}
+
+.overview-hospital-row strong {
+  display: block;
+  font-size: 13px;
+}
+
+.overview-hospital-row span {
+  display: block;
+  color: var(--muted);
+  font-size: 11px;
+  margin-top: 2px;
 }
 
 .card-header {
@@ -898,6 +1085,14 @@ button:active {
   .er-vitals-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .overview-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .overview-vitals {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
 @media (min-width: 641px) and (max-width: 1100px) {
@@ -996,6 +1191,17 @@ button:active {
     display: none;
   }
 
+  .pc-only-tab,
+  .pane-overview {
+    display: none !important;
+  }
+
+  .mode-overview .pane-paramedic {
+    display: block !important;
+    max-width: none;
+    width: 100%;
+  }
+
   .card {
     padding: 14px;
     overflow: visible;
@@ -1070,7 +1276,9 @@ button:active {
   }
 
   .er-vitals-grid,
-  .er-detail-grid {
+  .er-detail-grid,
+  .overview-vitals,
+  .overview-hospital-meta {
     grid-template-columns: 1fr;
   }
 

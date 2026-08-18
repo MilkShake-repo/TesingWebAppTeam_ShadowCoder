@@ -2,7 +2,7 @@
 
 // --- 1. State & Data Models ---
 const state = {
-  activeMode: 'split', // 'split', 'paramedic', 'er', 'hospital-admin', 'patient-admin'
+  activeMode: 'overview', // 'overview', 'paramedic', 'er', 'hospital-admin', 'patient-admin'
   patient: {
     id: 'GH-2048',
     age: 42,
@@ -72,6 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // Initial render & sync
   renderHospitals();
   renderERCapacity();
+  renderOverviewHospitals();
   renderHospitalAdminBeds();
   syncParamedicToER();
 });
@@ -228,7 +229,32 @@ function syncParamedicToER() {
   if (registryInjury) registryInjury.textContent = `${state.patient.injuryType} emergency`;
   if (adminQueuePatientId) adminQueuePatientId.textContent = state.patient.id;
 
+  syncOverview(newsScore, isCritical);
   autoSelectBestHospital();
+}
+
+function syncOverview(newsScore, isCritical) {
+  const overviewPatientId = document.getElementById('overview-patient-id');
+  const overviewRiskBadge = document.getElementById('overview-risk-badge');
+  const overviewHr = document.getElementById('overview-hr');
+  const overviewSpo2 = document.getElementById('overview-spo2');
+  const overviewBp = document.getElementById('overview-bp');
+  const overviewGcs = document.getElementById('overview-gcs');
+  const overviewNews = document.getElementById('overview-news');
+  const overviewNotes = document.getElementById('overview-notes');
+
+  if (overviewPatientId) overviewPatientId.textContent = state.patient.id;
+  if (overviewHr) overviewHr.textContent = state.patient.hr;
+  if (overviewSpo2) overviewSpo2.textContent = `${state.patient.spo2}%`;
+  if (overviewBp) overviewBp.textContent = `${state.patient.sbp}/80`;
+  if (overviewGcs) overviewGcs.textContent = state.patient.gcs;
+  if (overviewNews) overviewNews.textContent = `NEWS2 ${newsScore}`;
+  if (overviewNotes) overviewNotes.textContent = state.patient.history;
+
+  if (overviewRiskBadge) {
+    overviewRiskBadge.className = isCritical ? 'badge badge-red' : 'badge badge-teal';
+    overviewRiskBadge.textContent = isCritical ? 'CRITICAL' : 'STABLE';
+  }
 }
 
 function setupFormListeners() {
@@ -413,6 +439,16 @@ function selectHospital(idx, userInitiated = true) {
   const erTargetName = document.getElementById('er-target-hospital-name');
   const erEta = document.getElementById('er-eta-countdown');
   const adminQueueEta = document.getElementById('admin-queue-eta');
+  const overviewPath = document.getElementById('overview-active-route');
+  const overviewDash = document.getElementById('overview-active-route-dash');
+  const overviewAmb = document.getElementById('overview-ambulance-marker');
+  const overviewTarget = document.getElementById('overview-target-hospital');
+  const overviewEta = document.getElementById('overview-eta');
+  const overviewHospitalName = document.getElementById('overview-hospital-name');
+  const overviewHospitalEta = document.getElementById('overview-hospital-eta');
+  const overviewHospitalSpecialty = document.getElementById('overview-hospital-specialty');
+  const overviewHospitalBeds = document.getElementById('overview-hospital-beds');
+  const overviewHospitalDesc = document.getElementById('overview-hospital-desc');
 
   if (svgPath) svgPath.setAttribute('d', target.routeSvg);
   if (svgDash) svgDash.setAttribute('d', target.routeSvg);
@@ -420,10 +456,21 @@ function selectHospital(idx, userInitiated = true) {
   if (erTargetName) erTargetName.textContent = target.name;
   if (erEta) erEta.textContent = `${target.eta} 12s`;
   if (adminQueueEta) adminQueueEta.textContent = target.eta;
+  if (overviewPath) overviewPath.setAttribute('d', target.routeSvg);
+  if (overviewDash) overviewDash.setAttribute('d', target.routeSvg);
+  if (overviewAmb) overviewAmb.setAttribute('transform', `translate(${target.ambPos.x}, ${target.ambPos.y})`);
+  if (overviewTarget) overviewTarget.textContent = target.name;
+  if (overviewEta) overviewEta.textContent = `${target.eta} 12s`;
+  if (overviewHospitalName) overviewHospitalName.textContent = target.name;
+  if (overviewHospitalEta) overviewHospitalEta.textContent = target.eta;
+  if (overviewHospitalSpecialty) overviewHospitalSpecialty.textContent = target.specialty;
+  if (overviewHospitalBeds) overviewHospitalBeds.textContent = `${target.beds} available`;
+  if (overviewHospitalDesc) overviewHospitalDesc.textContent = target.desc;
   const registryDestination = document.getElementById('registry-active-destination');
   if (registryDestination) registryDestination.textContent = target.name;
 
   renderHospitals();
+  renderOverviewHospitals();
   if (userInitiated) {
     showToast(`Route updated to ${target.name}`);
   }
@@ -450,6 +497,24 @@ function renderHospitals() {
       </div>
     `;
   }).join('');
+}
+
+function renderOverviewHospitals() {
+  const container = document.getElementById('overview-hospital-list');
+  if (!container) return;
+
+  container.innerHTML = state.hospitalDirectory.map((h, i) => `
+    <div class="overview-hospital-row ${i === state.selectedHospitalIndex ? 'selected' : ''}" onclick="selectHospital(${i})">
+      <div>
+        <strong>${h.name}</strong>
+        <span>${h.desc}</span>
+      </div>
+      <div>
+        <strong>${h.beds}</strong>
+        <span>${h.eta}</span>
+      </div>
+    </div>
+  `).join('');
 }
 
 function renderERCapacity() {
