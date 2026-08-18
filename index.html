@@ -799,22 +799,26 @@
 
   <!-- ==================== MOBILE BOTTOM NAVIGATION BAR ==================== -->
   <nav class="mobile-bottom-nav" aria-label="Mobile Navigation">
-    <button class="bottom-nav-item" data-mode="overview">
+    <button class="bottom-nav-item" data-mode="overview" title="Command Overview">
       <span class="nav-icon">📡</span>
       <span>Overview</span>
     </button>
-    <button class="bottom-nav-item active" data-mode="paramedic">
+    <button class="bottom-nav-item active" data-mode="paramedic" title="Paramedic Tablet">
       <span class="nav-icon">🚑</span>
       <span>Paramedic</span>
     </button>
     <button class="bottom-nav-fab" onclick="VoiceEngine.toggleListening()" title="Voice Dictate Vitals">
       🎙️
     </button>
-    <button class="bottom-nav-item" data-mode="er">
+    <button class="bottom-nav-item" data-mode="er" title="ER Monitor">
       <span class="nav-icon">🏥</span>
       <span>ER Monitor</span>
     </button>
-    <button class="bottom-nav-item" data-mode="patient-admin">
+    <button class="bottom-nav-item" data-mode="hospital-admin" title="Hospital Admin">
+      <span class="nav-icon">📋</span>
+      <span>Admin</span>
+    </button>
+    <button class="bottom-nav-item" data-mode="patient-admin" title="Fleet Operations">
       <span class="nav-icon">🚨</span>
       <span>Fleet</span>
     </button>

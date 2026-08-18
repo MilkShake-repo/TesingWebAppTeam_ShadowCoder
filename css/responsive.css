@@ -13,7 +13,12 @@
   }
 
   .mobile-bottom-nav {
-    display: flex;
+    display: flex !important;
+    visibility: visible;
+    opacity: 1;
+    width: 100%;
+    min-height: var(--bottom-nav-height);
+    z-index: 1000;
   }
 
   .app-header {
