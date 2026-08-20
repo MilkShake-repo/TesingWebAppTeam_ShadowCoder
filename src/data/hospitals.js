@@ -1,0 +1,7 @@
+export const hospitals = [
+  { name: 'St. Catherine Trauma Centre', eta: '8 min', distance: '3.2 km', beds: 12, accent: 'teal', status: 'Government · Trauma + ICU' },
+  { name: 'Riverside General Hospital', eta: '11 min', distance: '4.7 km', beds: 6, accent: 'lavender', status: 'Private · Trauma + ICU' },
+  { name: 'City Medical Institute', eta: '14 min', distance: '6.1 km', beds: 2, accent: 'amber', status: 'Government · Emergency care' },
+  { name: 'Green Valley Multispeciality', eta: '16 min', distance: '7.4 km', beds: 8, accent: 'teal', status: 'Private · Emergency + CT' },
+  { name: 'Bengaluru Civic Hospital', eta: '19 min', distance: '8.8 km', beds: 4, accent: 'lavender', status: 'Government · Emergency care' },
+]
