@@ -1,0 +1,38 @@
+/* Official ASVA artwork is displayed as supplied, with no crop or visual treatment. */
+.brand {
+  display: flex;
+  align-items: center;
+  padding: 0 9px 22px;
+}
+
+.brand-logo {
+  display: block;
+  width: 58px;
+  height: 58px;
+  object-fit: contain;
+  flex: none;
+}
+
+@media (max-width: 700px) {
+  .topbar::before {
+    content: '';
+    display: block;
+    width: 46px;
+    height: 46px;
+    flex: none;
+    background: url('/asva-removebg-preview.png') center / contain no-repeat;
+  }
+
+  .topbar {
+    gap: 10px;
+  }
+
+  .topbar > div:first-child {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .header-actions {
+    gap: 8px;
+  }
+}
