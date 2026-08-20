@@ -1,5 +1,6 @@
 import {
   Ambulance,
+  ArrowLeft,
   Check,
   Hospital,
   MapPin,
@@ -27,7 +28,7 @@ const roles = {
   },
 };
 
-export default function ProfilePage({ role = "crew", onSave }) {
+export default function ProfilePage({ role = "crew", onSave, onBack }) {
   const profileRole = roles[role] || roles.crew;
   const RoleIcon = profileRole.icon;
 
@@ -35,6 +36,9 @@ export default function ProfilePage({ role = "crew", onSave }) {
     <div className="profile-page">
       <header className="profile-header">
         <div>
+          <button className="profile-back" onClick={onBack} type="button">
+            <ArrowLeft size={15} /> Back to dashboard
+          </button>
           <p className="eyebrow">ACCOUNT PROFILE</p>
           <h1>Manage your ASVA profile</h1>
           <p className="profile-subtitle">
@@ -96,6 +100,15 @@ export default function ProfilePage({ role = "crew", onSave }) {
             <button className="profile-save" onClick={onSave} type="button">
               <Check size={17} /> Save changes
             </button>
+          </div>
+
+          <div className="profile-access">
+            <div>
+              <p className="eyebrow">TEST ACCOUNT ACCESS</p>
+              <strong>Arjun can access both workspaces</strong>
+              <span>Crew dashboard · Hospital admin dashboard</span>
+            </div>
+            <Pill tone="live">Dual access enabled</Pill>
           </div>
         </Glass>
       </div>

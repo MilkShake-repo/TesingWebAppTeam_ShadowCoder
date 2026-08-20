@@ -19,9 +19,12 @@ import AmbulanceView from "./components/ambulance/AmbulanceView";
 import HospitalView from "./components/hospital/HospitalView";
 import ReferralModal from "./components/referral/ReferralModal";
 import TrafficView from "./components/traffic/TrafficView";
+import HospitalAdminLogin from "./pages/auth/HospitalAdminLogin";
+import ProfilePage from "./pages/profile/ProfilePage";
 
 export default function App() {
   const [role, setRole] = useState("ambulance"),
+    [view, setView] = useState("dashboard"),
     [active, setActive] = useState("command"),
     [tracking, setTracking] = useState(false),
     [listening, setListening] = useState(false),
@@ -73,6 +76,7 @@ export default function App() {
             onClick={() => {
               setRole("ambulance");
               setActive("command");
+              setView("dashboard");
             }}
           >
             <Ambulance size={16} />
@@ -80,10 +84,7 @@ export default function App() {
           </button>
           <button
             className={role === "hospital" ? "selected" : ""}
-            onClick={() => {
-              setRole("hospital");
-              setActive("intake");
-            }}
+            onClick={() => setView("hospital-login")}
           >
             <Hospital size={16} />
             Hospital
@@ -107,6 +108,7 @@ export default function App() {
             onClick={() => {
               setRole("traffic");
               setActive("traffic");
+              setView("dashboard");
             }}
           >
             <Radio size={18} />
@@ -128,13 +130,17 @@ export default function App() {
                 : "LIVE EMERGENCY CASE"}
             </p>
             <h1>
-              {role === "hospital"
-                ? "Incoming patient command"
-                : role === "traffic"
-                  ? "Traffic coordination centre"
-                  : phase === "pickup"
-                    ? "Pickup navigation"
-                    : "Emergency response command"}
+              {view === "profile"
+                ? "Crew profile dashboard"
+                : view === "hospital-login"
+                  ? "Hospital admin access"
+                  : role === "hospital"
+                    ? "Incoming patient command"
+                    : role === "traffic"
+                      ? "Traffic coordination centre"
+                      : phase === "pickup"
+                        ? "Pickup navigation"
+                        : "Emergency response command"}
             </h1>
           </div>
           <div className="header-actions">
@@ -145,10 +151,32 @@ export default function App() {
             <button className="icon-button">
               <Bell size={19} />
             </button>
-            <div className="avatar">AK</div>
+            <button
+              className="avatar"
+              onClick={() => setView("profile")}
+              title="Open crew profile"
+              type="button"
+            >
+              AK
+            </button>
           </div>
         </header>
-        {role === "hospital" ? (
+        {view === "profile" ? (
+          <ProfilePage
+            role="crew"
+            onBack={() => setView("dashboard")}
+            onSave={() => setView("dashboard")}
+          />
+        ) : view === "hospital-login" ? (
+          <HospitalAdminLogin
+            onBack={() => setView("dashboard")}
+            onLogin={() => {
+              setRole("hospital");
+              setActive("intake");
+              setView("dashboard");
+            }}
+          />
+        ) : role === "hospital" ? (
           <HospitalView
             sent={sent}
             vitals={vitals}

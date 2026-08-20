@@ -1,4 +1,10 @@
-import { Activity, Ambulance, CircleAlert, Route } from "lucide-react";
+import {
+  Activity,
+  Ambulance,
+  CircleAlert,
+  Route,
+  UserRound,
+} from "lucide-react";
 import { Glass, Pill } from "../ui";
 import MapCard from "../map/MapCard";
 
@@ -121,6 +127,36 @@ export default function HospitalView({
           </button>
         </Glass>
       </div>
+      <Glass className="hospital-users">
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">AUTHORIZED USERS</p>
+            <h2>Who uses this hospital workspace</h2>
+          </div>
+          <Pill tone="live">4 active</Pill>
+        </div>
+        <div className="hospital-user-list">
+          {[
+            ["Dr. Meera Shah", "Emergency physician", "Online"],
+            ["Nikhil Rao", "Triage nurse", "Online"],
+            ["Arjun Kumar", "Ambulance crew · test access", "Shared"],
+            ["Priya Menon", "Hospital administrator", "Online"],
+          ].map(([name, title, status]) => (
+            <div className="hospital-user" key={name}>
+              <div className="hospital-user-avatar">
+                <UserRound size={16} />
+              </div>
+              <div>
+                <strong>{name}</strong>
+                <span>{title}</span>
+              </div>
+              <Pill tone={status === "Shared" ? "warning" : "success"}>
+                {status}
+              </Pill>
+            </div>
+          ))}
+        </div>
+      </Glass>
       <MapCard />
     </div>
   );
